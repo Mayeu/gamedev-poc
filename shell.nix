@@ -14,6 +14,7 @@ pkgs.mkShell {
     coreutils
     findutils
     bash
+    graphviz
 
     # Elixir
     elixir_1_14
