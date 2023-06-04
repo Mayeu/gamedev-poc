@@ -23,8 +23,9 @@ defmodule Snake.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:scenic, "~> 0.11.0"},
+      {:scenic, "~> 0.11.1"},
       {:scenic_driver_local, "~> 0.11.0"},
+      {:scenic_live_reload, "~> 0.3", only: :dev}
     ]
   end
 end

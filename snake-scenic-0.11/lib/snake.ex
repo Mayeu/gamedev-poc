@@ -9,6 +9,7 @@ defmodule Snake do
 
     # start the application with the viewport
     children = [
+      ScenesState,
       {Scenic, [main_viewport_config]},
       Snake.PubSub.Supervisor
     ]

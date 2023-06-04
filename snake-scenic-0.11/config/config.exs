@@ -10,7 +10,7 @@ config :snake, :viewport,
   name: :main_viewport,
   size: {800, 600},
   theme: :dark,
-  default_scene: Snake.Scene.Home,
+  default_scene: Scenes.Game,
   drivers: [
     [
       module: Scenic.Driver.Local,
@@ -19,6 +19,19 @@ config :snake, :viewport,
       on_close: :stop_system
     ]
   ]
+
+# Setup live reload
+case Mix.env() do
+  :dev ->
+    config :exsync,
+      reload_timeout: 75,
+      reload_callback: {ScenicLiveReload, :reload_current_scenes, []}
+
+    config :logger, :console, level: :debug
+
+  _ ->
+    nil
+end
 
 # It is also possible to import configuration files, relative to this
 # directory. For example, you can emulate configuration per environment
