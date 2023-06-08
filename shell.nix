@@ -24,6 +24,11 @@ pkgs.mkShell {
     glew # An OpenGL extension loading library for C/C++
     pkg-config
     gcc
+
+    # For Membrane
+    portaudio
+    libmad
+    ffmpeg_6-headless
   ] ++ lib.optionals stdenv.isDarwin [
     darwin.apple_sdk.frameworks.Cocoa
   ];
