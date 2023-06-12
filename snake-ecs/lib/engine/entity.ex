@@ -6,27 +6,39 @@ defmodule Engine.Entity do
   alias Engine.Action
   alias Engine.Entity
 
-  def create_entity(type, world_name) when is_atom(type) do
+  @spec create(atom(), atom()) :: GenServer.on_start()
+  def create(type, world_name \\ :global) when is_atom(type) do
     full_type = Module.concat(Engine.EntityTypes, type)
     data = full_type.create()
     data = %Entity.Data{data | world_name: world_name, action_queue: Qex.new()}
     start_link(data)
   end
 
+  @spec pop_action(pid()) :: Engine.Action.t() | :empty
   def pop_action(entity) do
     GenServer.call(entity, :pop_action)
   end
 
-  def get_component(entity, type) do
+  # TODO: Can't type Component, because there are many ComponentTypes
+  # Not sure how to type that more generically
+  # @spec pop_action(pid()) :: Engine.Component.Data.t() | :empty
+  @spec get_component(pid(), atom()) :: any()
+  def(get_component(entity, type)) do
     GenServer.call(entity, {:get_component, type})
   end
 
+  @spec set_component_data(pid(), atom(), atom(), any()) :: :ok | :error
   def set_component_data(entity, type, key, value) do
     GenServer.call(entity, {:set_component_data, type, key, value})
   end
 
   def start_link(%Entity.Data{} = entity_data) do
     GenServer.start_link(__MODULE__, data: entity_data)
+  end
+
+  @spec destroy(pid()) :: :ok
+  def destroy(entity) do
+    GenServer.call(entity, :destroy)
   end
 
   @impl GenServer
@@ -110,6 +122,7 @@ defmodule Engine.Entity do
   end
 
   def handle_call(:destroy, _from, state) do
+    # TODO: remove the pid from the groups is part of? Feels pg may not automagically detect that the pid is dead
     {:stop, :normal, :ok, state}
   end
 
@@ -126,10 +139,10 @@ defmodule Engine.Entity do
   # Private helper functions
 
   defp register_with_component_group(type, world_name) do
-    Entity.Store.add_entity_to_group(type, world_name, self())
+    Entity.Store.add_to_group(type, world_name, self())
   end
 
   defp unregister_with_component_group(type, world_name) do
-    Entity.Store.remove_entity_from_group(type, world_name, self())
+    Entity.Store.remove_from_group(type, world_name, self())
   end
 end

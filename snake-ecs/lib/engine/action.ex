@@ -11,7 +11,7 @@ defmodule Engine.Action do
     field(:payload, %{}, enforce: true)
   end
 
-  def make_action(type, target, extra_data \\ %{}) do
+  def create(type, target, extra_data \\ %{}) do
     %Action{
       action_type: type,
       target_entity: target,

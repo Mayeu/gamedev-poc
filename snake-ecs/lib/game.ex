@@ -9,6 +9,13 @@ defmodule Game do
 
     # start the application with the viewport
     children = [
+      # Process Group
+      # To manage groups of entities in the store
+      # Or, one can export ERL_FLAGS="-kernel start_pg true"
+      %{
+        id: :pg,
+        start: {:pg, :start_link, []}
+      },
       {Scenic, [main_viewport_config]},
       PubSub.Supervisor
     ]

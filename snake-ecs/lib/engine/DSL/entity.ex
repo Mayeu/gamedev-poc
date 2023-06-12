@@ -9,23 +9,22 @@ defmodule Engine.DSL.Entity do
     quote do
       # Maybe it should Game.Entity instead of Engine.EntityTypes
       defmodule Engine.EntityTypes.unquote(name) do
-        alias ElixirRPG.Entity
+        alias Engine.Entity
 
         Module.register_attribute(__MODULE__, :components, accumulate: true, persist: true)
         Module.register_attribute(__MODULE__, :entity_name, persist: true)
 
         unquote(block)
 
-        defp __build_component(type, default_data) do
-          full_type = Module.concat(Engine.ComponentTypes, type)
-          struct(full_type, default_data)
+        defp __full_type(type) do
+          Module.concat(Engine.ComponentTypes, type)
         end
 
         def create do
           components =
             Enum.reduce(@components, %{}, fn {type, default_data}, acc ->
-              comp = __build_component(type, default_data)
-              Map.put_new(acc, type, comp)
+              full_type = __full_type(type)
+              Map.put_new(acc, full_type, struct(full_type, default_data))
             end)
 
           %Entity.Data{
