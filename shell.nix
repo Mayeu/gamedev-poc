@@ -14,7 +14,10 @@ pkgs.mkShell {
     coreutils
     findutils
     bash
+
+    # Extra buildtools
     graphviz
+    scc
 
     # Elixir
     elixir_1_14
@@ -24,6 +27,11 @@ pkgs.mkShell {
     glew # An OpenGL extension loading library for C/C++
     pkg-config
     gcc
+
+    # For Membrane
+    portaudio
+    libmad
+    ffmpeg_6-headless
   ] ++ lib.optionals stdenv.isDarwin [
     darwin.apple_sdk.frameworks.Cocoa
   ];
