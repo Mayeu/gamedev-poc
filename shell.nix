@@ -14,7 +14,10 @@ pkgs.mkShell {
     coreutils
     findutils
     bash
+
+    # Extra buildtools
     graphviz
+    scc
 
     # Elixir
     elixir_1_14
